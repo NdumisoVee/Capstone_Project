@@ -12,7 +12,7 @@ from .serializers import ReviewSerializer, MovieSerializer, UserSerializer, Comm
 # User Registration View
 # Allows new users to register
 class UserCreateView(generics.CreateAPIView):
-    serializer_class = UserSerializer
+     serializer_class = UserSerializer
 
 
 # Review List and Create View

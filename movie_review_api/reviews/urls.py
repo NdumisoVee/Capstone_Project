@@ -14,4 +14,4 @@ urlpatterns = [
     path('reviews/<int:pk>/comments/', CommentListView.as_view(), name='comment_list'),
     path('comments/<int:pk>/', CommentDetailView.as_view(), name='comment_detail'),
 
-    ]
+    ] #

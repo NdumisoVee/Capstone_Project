@@ -5,7 +5,7 @@ from .models import Review, Movie, Comment
 
 # Serializer for handling review data
 class ReviewSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username', read_only=True)  # Read-only field to display the username of the review's author
+    username = serializers.CharField(source='user.username', read_only=True)  # #Read-only field to display the username of the review's author
 
     class Meta:
         model = Review

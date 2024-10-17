@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,7 +13,8 @@ from .serializers import ReviewSerializer, MovieSerializer, UserSerializer, Comm
 # User Registration View
 # Allows new users to register
 class UserCreateView(generics.CreateAPIView):
-     serializer_class = UserSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 # Review List and Create View
@@ -24,10 +26,6 @@ class ReviewListCreateView(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['movie_title', 'rating']  # Allows filtering by movie title and rating
 
-    def perform_create(self, serializer):
-        # Automatically set the user to the current user when creating a review
-        serializer.save(user=self.request.user)
-
 
 # Review Detail View (Retrieve, Update, Delete)
 # Allows users to view, update, or delete their own reviews
@@ -35,10 +33,6 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        # Limits the queryset to reviews created by the current user
-        return self.queryset.filter(user=self.request.user)
 
     def get_object(self):
         review = super().get_object()

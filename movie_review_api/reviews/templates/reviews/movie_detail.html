@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.title }}</title>
+</head>
+<body>
+    <h1>{{ movie.title }}</h1>
+    <p>{{ movie.description }}</p>
+    <h2>Reviews:</h2>
+    <ul>
+        {% for review in reviews %}
+        <li><strong>{{ review.user.username }}:</strong> {{ review.review_content }} ({{ review.rating }}/5)</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

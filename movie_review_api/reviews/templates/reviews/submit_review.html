@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Review</title>
+</head>
+<body>
+    <h1>Submit a Review for {{ movie.title }}</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        <div>
+            <label for="review_content">Review Content:</label>
+            <textarea name="review_content" id="review_content" rows="4" cols="50"></textarea>
+        </div>
+        <div>
+            <label for="rating">Rating (1-5):</label>
+            <input type="number" name="rating" id="rating" min="1" max="5">
+        </div>
+        <div>
+            <button type="submit">Submit Review</button>
+        </div>
+    </form>
+</body>
+</html>

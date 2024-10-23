@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth.models import User
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.http import JsonResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, render, redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, generics, permissions
 from rest_framework.exceptions import PermissionDenied
@@ -129,3 +130,46 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ['PUT', 'PATCH', 'DELETE'] and comment.user != self.request.user:
             raise PermissionDenied("You do not have permission to modify or delete this comment.")
         return comment
+
+
+# HTML
+def login_view(request):
+    return render(request, 'reviews/login.html')
+
+
+def home_view(request):
+    return render(request, 'reviews/index.html')
+
+
+def movie_detail_view(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
+    reviews = Review.objects.filter(movie_title=movie)
+    return render(request, 'reviews/movie_detail.html', {'movie': movie, 'reviews': reviews})
+
+
+def submit_review(request):
+    # Check if the user is authenticated before allowing review submission
+    if not request.user.is_authenticated:
+        # If the user is not authenticated, return a forbidden response or redirect them to login
+        return HttpResponseForbidden("You must be logged in to submit a review.")
+
+    # Handle the form submission
+    if request.method == 'POST':
+        movie_title = request.POST.get('movie_title')
+        rating = request.POST.get('rating')
+        review_content = request.POST.get('review_content')
+
+        # Create a new review and associate it with the current user
+        review = Review.objects.create(
+            user=request.user,
+            movie_title=movie_title,
+            rating=rating,
+            review_content=review_content,
+        )
+
+        # Add a success message
+        messages.success(request, 'Review submitted successfully!')
+        return redirect('reviews/submit_review')  # Redirect to the same page or another page as needed
+
+    # Render the review submission form
+    return render(request, 'reviews/submit_review.html')
